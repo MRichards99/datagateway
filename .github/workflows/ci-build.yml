@@ -158,7 +158,7 @@ jobs:
         run: |
           cd datagateway-api; poetry run python -m util.icat_db_generator -s 4 -y 3; cd ..
       - name: Start API
-        run: cd datagateway-api; nohup poetry run python -m datagateway_api.src.main > api-output.txt 2>&1 &
+        run: cd datagateway-api; poetry run python -m datagateway_api.src.main > api-output.txt 2>&1 &
       - name: Back a dir
         run: cd ..
 
@@ -187,6 +187,8 @@ jobs:
           npm config set scripts-prepend-node-path true
           sudo apt-get install libgconf-2-4
           yarn --frozen-lockfile
+      - name: Output API config
+        run: cd datagateway-api; cat config.json; cat api-output.txt
       - name: Test API curl request
         run: |
           curl --location --request POST 'http://localhost:5000/sessions' \
