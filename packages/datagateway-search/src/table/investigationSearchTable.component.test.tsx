@@ -39,52 +39,46 @@ describe('Investigation Search Table component', () => {
     );
     state.dgcommon.data = [
       {
-        ID: 1,
-        TITLE: 'Test 1',
-        NAME: 'Test 1',
-        SUMMARY: 'foo bar',
-        VISIT_ID: '1',
-        RB_NUMBER: '1',
-        DOI: 'doi 1',
-        SIZE: 1,
-        INVESTIGATIONINSTRUMENT: [
+        id: 1,
+        title: 'Test 1',
+        name: 'Test 1',
+        summary: 'foo bar',
+        visitId: '1',
+        rbNumber: '1',
+        doi: 'doi 1',
+        size: 1,
+        investigationInstruments: [
           {
-            ID: 1,
-            INVESTIGATION_ID: 1,
-            INSTRUMENT_ID: 3,
-            INSTRUMENT: {
-              ID: 3,
-              FACILITY_ID: 1,
-              NAME: 'LARMOR',
+            id: 1,
+            instrument: {
+              id: 3,
+              name: 'LARMOR',
             },
           },
         ],
-        STUDYINVESTIGATION: [
+        studyInvestigations: [
           {
-            ID: 6,
-            STUDY_ID: 7,
-            INVESTIGATION_ID: 1,
-            STUDY: {
-              ID: 7,
-              PID: 'study pid',
-              NAME: 'study name',
-              MOD_TIME: '2019-06-10',
-              CREATE_TIME: '2019-06-10',
+            id: 6,
+            study: {
+              id: 7,
+              pid: 'study pid',
+              name: 'study name',
+              modTime: '2019-06-10',
+              createTime: '2019-06-10',
             },
           },
         ],
-        STARTDATE: '2019-06-10',
-        ENDDATE: '2019-06-11',
-        FACILITY: {
-          ID: 2,
-          NAME: 'facility name',
-          FACILITYCYCLE: [
+        startDate: '2019-06-10',
+        endDate: '2019-06-11',
+        facility: {
+          id: 2,
+          name: 'facility name',
+          facilityCycles: [
             {
-              ID: 2,
-              FACILITY_ID: 2,
-              NAME: 'facility cycle name',
-              STARTDATE: '2000-06-10',
-              ENDDATE: '2020-06-11',
+              id: 2,
+              name: 'facility cycle name',
+              startDate: '2000-06-10',
+              endDate: '2020-06-11',
             },
           ],
         },
@@ -159,13 +153,13 @@ describe('Investigation Search Table component', () => {
     filterInput.simulate('change');
 
     expect(testStore.getActions()[4]).toEqual(
-      filterTable('TITLE', { type: 'include', value: 'test' })
+      filterTable('title', { type: 'include', value: 'test' })
     );
 
     filterInput.instance().value = '';
     filterInput.simulate('change');
 
-    expect(testStore.getActions()[5]).toEqual(filterTable('TITLE', null));
+    expect(testStore.getActions()[5]).toEqual(filterTable('title', null));
   });
 
   it('sends filterTable action on date filter', () => {
@@ -185,13 +179,13 @@ describe('Investigation Search Table component', () => {
     filterInput.simulate('change');
 
     expect(testStore.getActions()[4]).toEqual(
-      filterTable('ENDDATE', { endDate: '2019-08-06' })
+      filterTable('endDate', { endDate: '2019-08-06' })
     );
 
     filterInput.instance().value = '';
     filterInput.simulate('change');
 
-    expect(testStore.getActions()[5]).toEqual(filterTable('ENDDATE', null));
+    expect(testStore.getActions()[5]).toEqual(filterTable('endDate', null));
   });
 
   it('sends sortTable action on sort', () => {
@@ -209,7 +203,7 @@ describe('Investigation Search Table component', () => {
       .first()
       .simulate('click');
 
-    expect(testStore.getActions()[4]).toEqual(sortTable('TITLE', 'asc'));
+    expect(testStore.getActions()[4]).toEqual(sortTable('title', 'asc'));
   });
 
   it('sends addToCart action on unchecked checkbox click', () => {
@@ -329,11 +323,13 @@ describe('Investigation Search Table component', () => {
 
   it('renders fine with incomplete data', () => {
     // this can happen when navigating between tables and the previous table's state still exists
+    // also tests that empty arrays are fine for investigationInstruments
     state.dgcommon.data = [
       {
-        ID: 1,
-        NAME: 'test',
-        TITLE: 'test',
+        id: 1,
+        name: 'test',
+        title: 'test',
+        investigationInstruments: [],
       },
     ];
 
@@ -397,7 +393,7 @@ describe('Investigation Search Table component', () => {
   });
 
   it('does not render ISIS link when instrumentId cannot be found', () => {
-    delete state.dgcommon.data[0].INVESTIGATIONINSTRUMENT;
+    delete state.dgcommon.data[0].investigationInstruments;
     const testStore = mockStore(state);
     const wrapper = mount(
       <Provider store={testStore}>
@@ -412,7 +408,7 @@ describe('Investigation Search Table component', () => {
   });
 
   it('does not render ISIS link when facilityCycleId cannot be found', () => {
-    delete state.dgcommon.data[0].FACILITY;
+    delete state.dgcommon.data[0].facility;
     const testStore = mockStore(state);
     const wrapper = mount(
       <Provider store={testStore}>
@@ -427,8 +423,8 @@ describe('Investigation Search Table component', () => {
   });
 
   it('does not render ISIS link when facilityCycleId has incompatible dates', () => {
-    state.dgcommon.data[0].FACILITY.FACILITYCYCLE[0].STARTDATE = '2020-06-11';
-    state.dgcommon.data[0].FACILITY.FACILITYCYCLE[0].ENDDATE = '2000-06-10';
+    state.dgcommon.data[0].facility.facilityCycles[0].startDate = '2020-06-11';
+    state.dgcommon.data[0].facility.facilityCycles[0].endDate = '2000-06-10';
     const testStore = mockStore(state);
     const wrapper = mount(
       <Provider store={testStore}>

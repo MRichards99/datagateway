@@ -1,7 +1,12 @@
 describe('ISIS - MyData Table', () => {
   beforeEach(() => {
     cy.intercept('/investigations/count').as('getInvestigationCount');
-    cy.login();
+    cy.login({
+      username: 'root',
+      password: 'pw',
+      mechanism: 'simple',
+    });
+    // TODO - Does wait() need to be removed?
     cy.visit('/my-data/ISIS').wait(['@getInvestigationCount'], {
       timeout: 10000,
     });
@@ -12,11 +17,11 @@ describe('ISIS - MyData Table', () => {
     cy.get('#datagateway-dataview').should('be.visible');
   });
 
-  it('should be able to click an investigation to see its datasets', () => {
+  it('should be able to click an investigation to see its landing page', () => {
     cy.get('[role="gridcell"] a').first().click({ force: true });
     cy.location('pathname').should(
       'eq',
-      '/browse/instrument/5/facilityCycle/10/investigation/1/dataset'
+      '/browse/instrument/5/facilityCycle/10/investigation/1'
     );
   });
 
@@ -129,7 +134,7 @@ describe('ISIS - MyData Table', () => {
       cy.get('[aria-label="Filter by Instrument"]')
         .find('input')
         .first()
-        .type('INSTRUMENT 8');
+        .type('Who set wind carry matter.');
 
       cy.get('[aria-rowcount="1"]').should('exist');
 
@@ -184,7 +189,7 @@ describe('ISIS - MyData Table', () => {
       );
       cy.get('[aria-controls="investigation-users-panel"]').click();
 
-      cy.get('#details-panel').contains('Robert499').should('be.visible');
+      cy.get('#details-panel').contains('Antonio Cooper').should('be.visible');
 
       cy.get('[aria-controls="investigation-publications-panel"]').should(
         'be.visible'
@@ -194,6 +199,16 @@ describe('ISIS - MyData Table', () => {
       cy.get('#details-panel')
         .contains('Democrat sea gas road police.')
         .should('be.visible');
+    });
+
+    it('and view datasets', () => {
+      cy.get('[aria-label="Show details"]').first().click();
+      cy.get('#investigation-datasets-tab').click({ force: true });
+
+      cy.location('pathname').should(
+        'eq',
+        '/browse/instrument/5/facilityCycle/10/investigation/1/dataset'
+      );
     });
 
     it('and then not view details anymore', () => {

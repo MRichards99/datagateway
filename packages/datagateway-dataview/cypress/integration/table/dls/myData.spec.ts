@@ -1,8 +1,12 @@
 describe('DLS - MyData Table', () => {
   beforeEach(() => {
-    cy.intercept('/datasets/count').as('getDatasetCount');
-    cy.login();
-    cy.visit('/my-data/DLS').wait(['@getDatasetCount'], { timeout: 10000 });
+    cy.intercept('/investigations/count').as('getInvestigationCount');
+    cy.login({
+      username: 'root',
+      password: 'pw',
+      mechanism: 'simple',
+    });
+    cy.visit('/my-data/DLS');
   });
 
   it('should load correctly', () => {
@@ -124,7 +128,7 @@ describe('DLS - MyData Table', () => {
       cy.get('[aria-label="Filter by Instrument')
         .find('input')
         .first()
-        .type('8');
+        .type('Who set wind carry matter.');
 
       cy.get('[aria-rowcount="1"]').should('exist');
 
@@ -164,7 +168,7 @@ describe('DLS - MyData Table', () => {
 
       cy.get('[aria-controls="visit-users-panel"]').click();
       cy.get('#visit-users-panel').should('not.have.attr', 'hidden');
-      cy.get('#details-panel').contains('Robert499').should('be.visible');
+      cy.get('#details-panel').contains('Antonio Cooper').should('be.visible');
 
       cy.get('[aria-controls="visit-publications-panel"]').click();
       cy.get('#visit-publications-panel').should('not.have.attr', 'hidden');

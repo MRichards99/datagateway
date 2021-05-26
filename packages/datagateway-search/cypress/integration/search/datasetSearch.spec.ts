@@ -2,13 +2,13 @@ describe('Dataset search tab', () => {
   beforeEach(() => {
     cy.login();
     cy.visit('/search/data/');
-    cy.intercept('/investigations/count?where=%7B%22ID').as(
+    cy.intercept('/investigations/count?where=%7B%22id').as(
       'investigationsCount'
     );
     cy.intercept('/investigations?').as('investigations');
-    cy.intercept('/datasets/count?where=%7B%22ID').as('datasetsCount');
+    cy.intercept('/datasets/count?where=%7B%22id').as('datasetsCount');
     cy.intercept('/datasets?').as('datasets');
-    cy.intercept('/datafiles/count?where=%7B%22ID').as('datafilesCount');
+    cy.intercept('/datafiles/count?where=%7B%22id').as('datafilesCount');
     cy.intercept('/datafiles?').as('datafiles');
     cy.intercept('/topcat/user/cart/LILS/cartItems').as('topcat');
   });
@@ -29,9 +29,22 @@ describe('Dataset search tab', () => {
 
     cy.get('[aria-label="Submit search button"]')
       .click()
-      .wait(['@investigations', '@investigations', '@investigationsCount'], {
-        timeout: 10000,
-      });
+      .wait(
+        [
+          '@investigations',
+          '@investigations',
+          '@investigationsCount',
+          '@datasets',
+          '@datasets',
+          '@datasetsCount',
+          '@datafiles',
+          '@datafiles',
+          '@datafilesCount',
+        ],
+        {
+          timeout: 20000,
+        }
+      );
 
     cy.get('[aria-label="Search table tabs"]')
       .contains('Dataset')
@@ -80,7 +93,21 @@ describe('Dataset search tab', () => {
   it('should be hidden if dataset checkbox is unchecked', () => {
     cy.get('[aria-label="Dataset checkbox"]').click();
 
-    cy.get('[aria-label="Submit search button"]').click();
+    cy.get('[aria-label="Submit search button"]')
+      .click()
+      .wait(
+        [
+          '@investigations',
+          '@investigations',
+          '@investigationsCount',
+          '@datafiles',
+          '@datafiles',
+          '@datafilesCount',
+        ],
+        {
+          timeout: 20000,
+        }
+      );
 
     cy.get('[aria-rowcount="50"]').should('exist');
 

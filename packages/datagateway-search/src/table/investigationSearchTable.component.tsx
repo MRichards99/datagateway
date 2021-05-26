@@ -83,8 +83,8 @@ const InvestigationSearchTable = (
 
   const dlsLink = (investigationData: Investigation): React.ReactElement =>
     tableLink(
-      `/browse/proposal/${investigationData.NAME}/investigation/${investigationData.ID}/dataset`,
-      investigationData.TITLE
+      `/browse/proposal/${investigationData.name}/investigation/${investigationData.id}/dataset`,
+      investigationData.title
     );
 
   const isisLink = (
@@ -92,43 +92,44 @@ const InvestigationSearchTable = (
   ): React.ReactElement | string => {
     let instrumentId;
     let facilityCycleId;
-    if (investigationData.INVESTIGATIONINSTRUMENT?.length) {
-      instrumentId = investigationData.INVESTIGATIONINSTRUMENT[0].INSTRUMENT_ID;
+    if (investigationData.investigationInstruments?.length) {
+      instrumentId =
+        investigationData.investigationInstruments[0].instrument?.id;
     } else {
-      return investigationData.TITLE;
+      return investigationData.title;
     }
 
     if (
-      investigationData.STARTDATE &&
-      investigationData.FACILITY?.FACILITYCYCLE?.length
+      investigationData.startDate &&
+      investigationData.facility?.facilityCycles?.length
     ) {
-      const facilityCycles = investigationData.FACILITY.FACILITYCYCLE.filter(
+      const facilityCycles = investigationData.facility.facilityCycles.filter(
         (facilityCycle) =>
-          investigationData.STARTDATE &&
-          facilityCycle.STARTDATE &&
-          facilityCycle.ENDDATE &&
-          investigationData.STARTDATE >= facilityCycle.STARTDATE &&
-          investigationData.STARTDATE <= facilityCycle.ENDDATE
+          investigationData.startDate &&
+          facilityCycle.startDate &&
+          facilityCycle.endDate &&
+          investigationData.startDate >= facilityCycle.startDate &&
+          investigationData.startDate <= facilityCycle.endDate
       );
       if (facilityCycles.length) {
-        facilityCycleId = facilityCycles[0].ID;
+        facilityCycleId = facilityCycles[0].id;
       }
     }
 
     if (facilityCycleId) {
       return tableLink(
-        `/browse/instrument/${instrumentId}/facilityCycle/${facilityCycleId}/investigation/${investigationData.ID}/dataset`,
-        investigationData.TITLE
+        `/browse/instrument/${instrumentId}/facilityCycle/${facilityCycleId}/investigation/${investigationData.id}/dataset`,
+        investigationData.title
       );
     } else {
-      return investigationData.TITLE;
+      return investigationData.title;
     }
   };
 
   const genericLink = (investigationData: Investigation): React.ReactElement =>
     tableLink(
-      `/browse/investigation/${investigationData.ID}/dataset`,
-      investigationData.TITLE
+      `/browse/investigation/${investigationData.id}/dataset`,
+      investigationData.title
     );
 
   const hierarchyLink = React.useMemo(() => {
@@ -202,17 +203,17 @@ const InvestigationSearchTable = (
           <div>
             <Typography>
               <b>{t('investigations.rb_number')}:</b>{' '}
-              {investigationData.RB_NUMBER}
+              {investigationData.rbNumber}
             </Typography>
             <Typography>
-              <b>{t('investigations.title')}:</b> {investigationData.TITLE}
+              <b>{t('investigations.title')}:</b> {investigationData.title}
             </Typography>
             <Typography>
               <b>{t('investigations.start_date')}:</b>{' '}
-              {investigationData.STARTDATE}
+              {investigationData.startDate}
             </Typography>
             <Typography>
-              <b>{t('investigations.end_date')}:</b> {investigationData.ENDDATE}
+              <b>{t('investigations.end_date')}:</b> {investigationData.endDate}
             </Typography>
           </div>
         );
@@ -220,7 +221,7 @@ const InvestigationSearchTable = (
       columns={[
         {
           label: t('investigations.title'),
-          dataKey: 'TITLE',
+          dataKey: 'title',
           cellContentRenderer: (cellProps: TableCellProps) => {
             const investigationData = cellProps.rowData as Investigation;
             return hierarchyLink(investigationData);
@@ -229,35 +230,32 @@ const InvestigationSearchTable = (
         },
         {
           label: t('investigations.visit_id'),
-          dataKey: 'VISIT_ID',
+          dataKey: 'visitId',
           filterComponent: textFilter,
         },
         {
           label: t('investigations.rb_number'),
-          dataKey: 'RB_NUMBER',
+          dataKey: 'rbNumber',
           filterComponent: textFilter,
         },
         {
           label: t('investigations.doi'),
-          dataKey: 'DOI',
+          dataKey: 'doi',
           filterComponent: textFilter,
         },
         {
           label: t('investigations.dataset_count'),
-          dataKey: 'DATASET_COUNT',
+          dataKey: 'datasetCount',
           disableSort: true,
         },
         {
           label: t('investigations.instrument'),
-          dataKey: 'INVESTIGATIONINSTRUMENT.INSTRUMENT.FULLNAME',
+          dataKey: 'investigationInstruments.instrument.fullName',
           cellContentRenderer: (cellProps: TableCellProps) => {
             const investigationData = cellProps.rowData as Investigation;
-            if (
-              investigationData.INVESTIGATIONINSTRUMENT &&
-              investigationData.INVESTIGATIONINSTRUMENT[0].INSTRUMENT
-            ) {
-              return investigationData.INVESTIGATIONINSTRUMENT[0].INSTRUMENT
-                .FULLNAME;
+            if (investigationData?.investigationInstruments?.[0]?.instrument) {
+              return investigationData.investigationInstruments[0].instrument
+                .fullName;
             } else {
               return '';
             }
@@ -266,7 +264,7 @@ const InvestigationSearchTable = (
         },
         {
           label: t('investigations.start_date'),
-          dataKey: 'STARTDATE',
+          dataKey: 'startDate',
           filterComponent: dateFilter,
           cellContentRenderer: (cellProps: TableCellProps) => {
             if (cellProps.cellData) {
@@ -277,7 +275,7 @@ const InvestigationSearchTable = (
         },
         {
           label: t('investigations.end_date'),
-          dataKey: 'ENDDATE',
+          dataKey: 'endDate',
           filterComponent: dateFilter,
           cellContentRenderer: (cellProps: TableCellProps) => {
             if (cellProps.cellData) {
@@ -307,14 +305,14 @@ const mapDispatchToProps = (
           {
             filterType: 'where',
             filterValue: JSON.stringify({
-              ID: { in: luceneData },
+              id: { in: luceneData },
             }),
           },
           {
             filterType: 'include',
             filterValue: JSON.stringify([
-              { INVESTIGATIONINSTRUMENT: 'INSTRUMENT' },
-              { FACILITY: 'FACILITYCYCLE' },
+              { investigationInstruments: 'instrument' },
+              { facility: 'facilityCycles' },
             ]),
           },
         ],
@@ -326,7 +324,7 @@ const mapDispatchToProps = (
         {
           filterType: 'where',
           filterValue: JSON.stringify({
-            ID: { in: luceneData },
+            id: { in: luceneData },
           }),
         },
       ])
@@ -342,7 +340,7 @@ const mapDispatchToProps = (
         {
           filterType: 'where',
           filterValue: JSON.stringify({
-            ID: { in: luceneData },
+            id: { in: luceneData },
           }),
         },
       ])
