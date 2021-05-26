@@ -141,7 +141,7 @@ jobs:
           '.backend=$BACKEND' datagateway-api/datagateway_api/config.json.example`" > datagateway-api/datagateway_api/config.json.example
       - name: Configure ICAT URL
         run: echo "`jq -r --arg ICAT_URL "https://scigateway-preprod.esc.rl.ac.uk:8181" \
-          '.backend=$ICAT_URL' datagateway-api/datagateway_api/config.json.example`" > datagateway-api/datagateway_api/config.json.example
+          '.icat_url=$ICAT_URL' datagateway-api/datagateway_api/config.json.example`" > datagateway-api/datagateway_api/config.json.example
       - name: Create config.json
         run: cp datagateway-api/datagateway_api/config.json.example datagateway-api/datagateway_api/config.json
       - name: Set debug mode to true
