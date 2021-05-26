@@ -187,6 +187,16 @@ jobs:
           npm config set scripts-prepend-node-path true
           sudo apt-get install libgconf-2-4
           yarn --frozen-lockfile
+      - name: Test API curl request
+        run: |
+          curl --location --request POST 'http://localhost:5000/sessions' \
+          --header 'Content-Type: application/json' \
+          --data-raw '{
+            "username": "",
+            "password": "",
+            "mechanism": "anon"
+          }
+          '
       - name: Run datagateway-dataview e2e tests
         run: yarn workspace datagateway-dataview run e2e
 
