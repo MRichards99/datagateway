@@ -7,6 +7,7 @@ on:
     branches:
       - master
       - use-local-ICAT-in-CI-runs-#641
+      - use-local-icat-ci-db-backend
 
 jobs:
   # lint-and-unit-test:
