@@ -159,7 +159,7 @@ jobs:
         run: cd datagateway-api; nohup poetry run python -m datagateway_api.src.main > api-output.txt 2>&1 &
       - name: Back a dir
         run: cd ..
-      
+
       # E2E tests
       - name: Checkout repo
         uses: actions/checkout@v2
