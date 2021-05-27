@@ -203,6 +203,17 @@ jobs:
             "mechanism": "anon"
           }
           '
+      - name: ids curl 1
+        run: curl -k https://localhost:8181/ids/ping
+      - name: topcat curl 1
+        run: curl -k https://localhost:8181/
+      - name: topcat curl 2
+        run: curl -k https://localhost:8181/user/cart
+      - name: topcat curl 3
+        run: curl -k https://localhost:8181/topcat
+      - name: topcat curl 4
+        run: curl -k https://localhost:8181/topcat/user/cart
+      
       - name: Run datagateway-dataview e2e tests
         run: yarn workspace datagateway-dataview run e2e
 
