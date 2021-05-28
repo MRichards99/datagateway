@@ -221,6 +221,7 @@ jobs:
       - name: Run datagateway-dataview e2e tests
         run: yarn workspace datagateway-dataview run e2e
       - name: power nap
+        if: success()
         run: sleep 1h
 
   # Separate e2e jobs so that they can run in parallel
