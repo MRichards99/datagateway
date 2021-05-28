@@ -78,6 +78,10 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
       - name: Add apt repo
         run: sudo add-apt-repository universe
       - name: Setup Java
@@ -216,6 +220,8 @@ jobs:
       
       - name: Run datagateway-dataview e2e tests
         run: yarn workspace datagateway-dataview run e2e
+      - name: power nap
+        run: sleep 1h
 
   # Separate e2e jobs so that they can run in parallel
   # download-e2e-test:
