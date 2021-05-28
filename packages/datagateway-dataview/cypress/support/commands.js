@@ -57,9 +57,9 @@ export const readSciGatewayToken = () => {
 Cypress.Commands.add('login', (credentials) => {
   return cy.readFile('server/e2e-settings.json').then((settings) => {
     let body = {
-      username: '',
-      password: '',
-      mechanism: 'anon',
+      username: 'root',
+      password: 'pw',
+      mechanism: 'simple',
     };
     if (credentials) {
       body = credentials;
